@@ -54,10 +54,30 @@ const selectOptions = [
 ];
 export default function Select({ }) {
     const [choice, setChoice] = useState(null);
+    const [choiceError, setChoiceError] = useState(null);
+
+    const sendForm = (choice) => {
+        return {
+            error: true,
+            field: "choice",
+            message: "Au moins une valeur doit être sélectionnée"
+        }
+    }
+
+    const submitForm = () => {
+        let result = sendForm(choice);
+        if(result.error){
+            setChoiceError(result);
+        }
+    }
 
     return (
         <>
             <CustomSelect selectOptions={selectOptions} onChange={(value) => setChoice(value)} />
+            {choiceError &&
+                <div className="error">{choiceError.message}</div>
+            }
+            <button onClick={submitForm}>envoyer</button>
         </>
     )
 }

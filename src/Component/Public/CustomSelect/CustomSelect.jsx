@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './CustomSelect.css';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import * as LucideIcons from "lucide-react";
@@ -12,15 +12,30 @@ function DynamicIcon({ name }) {
 export default function CustomSelect({ selectOptions, onChange }) {
     const [open, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(null);
+    const selectRef = useRef();
 
-    const onSelectValue = (option) => {
+
+    useEffect(() => {
+        const onMouseDown = (e) => {
+            if(!selectRef) return;
+
+            if(!selectRef.current.contains(e.target)){
+                setOpen(false);
+            }
+        }
+        document.addEventListener('click',onMouseDown);
+    },[])
+
+    const onSelectValue = (option,e) => {
         setOpen(false);
         setSelectedValue(option);
         onChange(option);
+        console.log("target :" + e.target)
+        console.log("current target :" + e.currentTarget)
     }
     return (
-        <div className="custom-select p-2 flex flex-col w-70">
-            <button onClick={() => setOpen(!open)} className='p-2 border rounded flex  justify-between'>
+        <div className="custom-select p-2 flex flex-col w-70 relative" ref={selectRef}>
+            <button onClick={() => setOpen(!open)} className='p-2 border rounded flex  justify-between h-10'>
                 {!selectedValue &&
                     "Sélectionnez une valeur"
                 }
@@ -38,10 +53,10 @@ export default function CustomSelect({ selectOptions, onChange }) {
                 }
             </button>
             {open &&
-                <div className="list flex border flex-col">
+                <div className="list flex border flex-col absolute top-12 w-65">
                     {selectOptions.map(option => {
                         return (
-                            <div className="option p-2 cursor-pointer hover:bg-blue-500 hover:text-white flex items-center gap-2" onClick={() => onSelectValue(option)}>
+                            <div className="option p-2 cursor-pointer hover:bg-blue-500 hover:text-white flex items-center gap-2 bg-white z-9999" onClick={(e) => onSelectValue(option,e)}>
                                 <DynamicIcon name={option.icon} />
                                 {option.label}
                             </div>
