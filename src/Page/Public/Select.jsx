@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CustomSelect from "../../Component/Public/CustomSelect/CustomSelect";
 const selectOptions = [
     {
@@ -55,6 +55,7 @@ const selectOptions = [
 export default function Select({ }) {
     const [choice, setChoice] = useState(null);
     const [choiceError, setChoiceError] = useState(null);
+    const selectRef = useRef();
 
     const sendForm = (choice) => {
         return {
@@ -66,17 +67,12 @@ export default function Select({ }) {
 
     const submitForm = () => {
         let result = sendForm(choice);
-        if(result.error){
-            setChoiceError(result);
-        }
+        selectRef.current.toto(result);
     }
 
     return (
         <>
-            <CustomSelect selectOptions={selectOptions} onChange={(value) => setChoice(value)} />
-            {choiceError &&
-                <div className="error">{choiceError.message}</div>
-            }
+            <CustomSelect selectOptions={selectOptions} onChange={(value) => setChoice(value)} error={choiceError} ref={selectRef} />
             <button onClick={submitForm}>envoyer</button>
         </>
     )
