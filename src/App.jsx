@@ -9,6 +9,7 @@ import Cart from './Page/Public/Cart/Cart';
 import Dashboard from './Page/Admin/Dashboard/Dashboard';
 import Product from './Page/Admin/Product/Product';
 import Order from './Page/Admin/Order/Order';
+import Select from './Page/Public/Select';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="Product" element={<ProductList/>} />
             <Route path="Product/:id" element={<ProductDetail/>} />
             <Route path="/Cart" element={<Cart/>} />
+            <Route path="/Select" element={<Select/>} />
           </Route>
           <Route path="/Admin" element={<AdminLayout/>}>
             <Route index element={<Dashboard/>} />
