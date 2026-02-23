@@ -36,7 +36,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      <Combobox list={[{key: 1,value:"Value 1"},{key: 2,value:"Value 2"},{key: 3,value:"Value 3"}]}/>
+      <Combobox list={[{key: 1,value:"Value 1"},{key: 2,value:"Value 2"},{key: 3,value:"Value 3"}]} multiple={true} onChange={() => true }/>
     </div>
   )
 }
