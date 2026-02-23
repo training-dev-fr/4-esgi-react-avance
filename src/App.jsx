@@ -10,6 +10,8 @@ import Dashboard from './Page/Admin/Dashboard/Dashboard';
 import Product from './Page/Admin/Product/Product';
 import Order from './Page/Admin/Order/Order';
 import Select from './Page/Public/Select';
+import Paint from './Page/Public/Paint/Paint';
+import Combobox from './Component/Public/Combobox/Combobox.jsx';
 
 function App() {
 
@@ -25,6 +27,7 @@ function App() {
             <Route path="Product/:id" element={<ProductDetail/>} />
             <Route path="/Cart" element={<Cart/>} />
             <Route path="/Select" element={<Select/>} />
+            <Route path="/Paint" element={<Paint/>} />
           </Route>
           <Route path="/Admin" element={<AdminLayout/>}>
             <Route index element={<Dashboard/>} />
@@ -33,6 +36,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <Combobox list={[{key: 1,value:"Value 1"},{key: 2,value:"Value 2"},{key: 3,value:"Value 3"}]}/>
     </div>
   )
 }

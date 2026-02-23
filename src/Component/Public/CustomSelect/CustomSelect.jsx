@@ -9,7 +9,7 @@ function DynamicIcon({ name }) {
     return <Icon size={16} />;
 }
 
-const CustomSelect = forwardRef(function ({ selectOptions, onChange }, ref) {
+const CustomSelect = forwardRef(function ({ selectOptions, onChange, title="Sélectionnez une valeur" }, ref) {
     const [open, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(null);
     const selectRef = useRef();
@@ -38,10 +38,10 @@ const CustomSelect = forwardRef(function ({ selectOptions, onChange }, ref) {
         console.log("current target :" + e.currentTarget)
     }
     return (
-        <div className="custom-select p-2 flex flex-col w-70 relative" ref={selectRef}>
-            <button onClick={() => setOpen(!open)} className='p-2 border rounded flex  justify-between h-10'>
+        <div className="custom-select flex flex-col w-70 relative" ref={selectRef}>
+            <button onClick={() => setOpen(!open)} className='p-2 border flex  justify-between h-10'>
                 {!selectedValue &&
-                    "Sélectionnez une valeur"
+                    title
                 }
                 {selectedValue &&
                     <div className="option flex items-center gap-2">
@@ -57,7 +57,7 @@ const CustomSelect = forwardRef(function ({ selectOptions, onChange }, ref) {
                 }
             </button>
             {open &&
-                <div className="list flex border flex-col absolute top-12 w-65">
+                <div className="list flex border flex-col absolute top-10 w-70">
                     {selectOptions.map(option => {
                         return (
                             <div className="option p-2 cursor-pointer hover:bg-blue-500 hover:text-white flex items-center gap-2 bg-white z-9999" onClick={(e) => onSelectValue(option, e)}>
