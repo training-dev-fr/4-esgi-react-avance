@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import './Combobox.css';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
-import Product from './Option/Product';
 
 export default function Combobox({ list, onChange, multiple = false, filter = false, template }) {
     const [open, setOpen] = useState(false);
@@ -11,8 +10,8 @@ export default function Combobox({ list, onChange, multiple = false, filter = fa
     const inputRef = useRef();
     const comboRef = useRef();
 
-    const OptionComponent = React.useMemo(
-        () => React.lazy(template),
+    const OptionComponent = useMemo(
+        () => lazy(template),
         [template]
     )
 
@@ -115,9 +114,9 @@ export default function Combobox({ list, onChange, multiple = false, filter = fa
                     {filterList.map(option => {
                         return (
                             <div className="option p-4 hover:bg-blue-500 cursor-pointer hover:text-white" key={"option-" + option.key} data-key={option.key} onClickCapture={() => handleSelect(option)}>
-                                <React.Suspense fallback={<div>Chargement</div>}>
+                                <Suspense fallback={<div>Chargement</div>}>
                                     <OptionComponent item={option} />
-                                </React.Suspense>
+                                </Suspense>
                             </div>
                         )
                     })}

@@ -45,6 +45,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       <Combobox list={productList} multiple={true} filter={true} onChange={() => true} template={() => import("./Component/Public/Combobox/Option/Product.jsx")}/>
+              <Combobox list={userList} multiple={true} filter={true} onChange={() => true} template={() => import("./Component/Public/Combobox/Option/User.jsx")}/>
     </div>
   )
 }
