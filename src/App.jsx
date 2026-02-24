@@ -12,31 +12,39 @@ import Order from './Page/Admin/Order/Order';
 import Select from './Page/Public/Select';
 import Paint from './Page/Public/Paint/Paint';
 import Combobox from './Component/Public/Combobox/Combobox.jsx';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [productList, setProductList] = useState([]);
 
-
+  useEffect(() => {
+    fetch(`https://dummyjson.com/products/?limit=20`)
+      .then(result => result.json())
+      .then(data => {
+        setProductList([...productList, ...data.products])
+      })
+  }, []);
   return (
     <div>
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout/>}>
+          <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="Product" element={<ProductList/>} />
-            <Route path="Product/:id" element={<ProductDetail/>} />
-            <Route path="/Cart" element={<Cart/>} />
-            <Route path="/Select" element={<Select/>} />
-            <Route path="/Paint" element={<Paint/>} />
+            <Route path="Product" element={<ProductList />} />
+            <Route path="Product/:id" element={<ProductDetail />} />
+            <Route path="/Cart" element={<Cart />} />
+            <Route path="/Select" element={<Select />} />
+            <Route path="/Paint" element={<Paint />} />
           </Route>
-          <Route path="/Admin" element={<AdminLayout/>}>
-            <Route index element={<Dashboard/>} />
-            <Route path="Product" element={<Product/>} />
-            <Route path="Orders" element={<Order/>} />
+          <Route path="/Admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="Product" element={<Product />} />
+            <Route path="Orders" element={<Order />} />
           </Route>
         </Routes>
       </BrowserRouter>
-      <Combobox list={[{key: 1,value:"Value 1"},{key: 2,value:"Value 2"},{key: 3,value:"Value 3"},{key:4,value:"Test 4"}]} multiple={true} filter={true} onChange={() => true }/>
+      <Combobox list={productList} multiple={true} filter={true} onChange={() => true} template={() => import("./Component/Public/Combobox/Option/Product.jsx")}/>
     </div>
   )
 }

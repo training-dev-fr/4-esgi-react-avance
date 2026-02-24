@@ -1,14 +1,21 @@
-import { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Combobox.css';
 import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import Product from './Option/Product';
 
-export default function Combobox({ list, onChange, multiple = false, filter = false }) {
+export default function Combobox({ list, onChange, multiple = false, filter = false, template }) {
     const [open, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(multiple ? [] : null);
     const [unselectedList, setUnselectedList] = useState(list);
     const [filterList, setFilterList] = useState(list);
     const inputRef = useRef();
     const comboRef = useRef();
+
+    const OptionComponent = React.useMemo(
+        () => React.lazy(template),
+        [template]
+    )
+
 
     const handleSelect = (option) => {
         if (multiple) {
@@ -44,7 +51,20 @@ export default function Combobox({ list, onChange, multiple = false, filter = fa
                 setOpen(false);
             }
         })
-    },[])
+    }, [])
+
+    useEffect(() => {
+        if (multiple) {
+            const selectedKeys = new Set(selectedValue.map((x) => x.key));
+            const nextUnselected = list.filter((opt) => !selectedKeys.has(opt.key));
+            setUnselectedList(nextUnselected);
+            setFilterList(nextUnselected);
+        } else {
+            setUnselectedList(list);
+            setFilterList(list);
+        }
+    }, [list]);
+
 
     const filterData = (e) => {
         let newFilter = unselectedList.filter(element => element.value.includes(e.target.value));
@@ -75,11 +95,11 @@ export default function Combobox({ list, onChange, multiple = false, filter = fa
                     }
 
                     <input type="text" ref={inputRef} className={`${(open && filter) ? "block" : "hidden"} p-2 -m-2 outline-0`} onKeyUp={filterData} />
-                
 
-                {multiple && selectedValue.length === 0 && !open &&
-                    <>Veuillez choisir une valeur</>
-                }
+
+                    {multiple && selectedValue.length === 0 && !open &&
+                        <>Veuillez choisir une valeur</>
+                    }
                 </div>
 
 
@@ -91,10 +111,13 @@ export default function Combobox({ list, onChange, multiple = false, filter = fa
                 }
             </div>
             {open &&
-                <div className="list ">
+                <div className="list max-h-120 overflow-y-auto">
                     {filterList.map(option => {
                         return (
-                            <div className="option p-4 hover:bg-blue-500 cursor-pointer hover:text-white" key={"option-" + option.key} data-key={option.key} onClickCapture={() => handleSelect(option)}>{option.value}</div>
+                            <div className="option p-4 hover:bg-blue-500 cursor-pointer hover:text-white" key={"option-" + option.key} data-key={option.key} onClickCapture={() => handleSelect(option)}>
+
+                                <OptionComponent item={option} />
+                            </div>
                         )
                     })}
                 </div>
