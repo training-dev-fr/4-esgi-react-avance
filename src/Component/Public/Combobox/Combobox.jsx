@@ -115,8 +115,9 @@ export default function Combobox({ list, onChange, multiple = false, filter = fa
                     {filterList.map(option => {
                         return (
                             <div className="option p-4 hover:bg-blue-500 cursor-pointer hover:text-white" key={"option-" + option.key} data-key={option.key} onClickCapture={() => handleSelect(option)}>
-
-                                <OptionComponent item={option} />
+                                <React.Suspense fallback={<div>Chargement</div>}>
+                                    <OptionComponent item={option} />
+                                </React.Suspense>
                             </div>
                         )
                     })}
