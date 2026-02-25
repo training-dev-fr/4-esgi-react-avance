@@ -14,6 +14,11 @@ import Paint from './Page/Public/Paint/Paint';
 import Combobox from './Component/Public/Combobox/Combobox.jsx';
 import { useEffect, useState } from 'react';
 import DynamicList from './Component/Public/DynamicList/DynamicList.jsx';
+import AutoComplete from './Component/Public/AutoComplete/AutoComplete.jsx';
+import { AuthProvider } from './Context/auth.context.jsx';
+import Modal from './Component/Public/Modal/Modal.jsx';
+import Page404 from './Page/Page404/Page404.jsx';
+import ProtectedRoute from './Context/ProtectedRoute.jsx';
 
 function App() {
   const [productList, setProductList] = useState([]);
@@ -29,45 +34,44 @@ function App() {
 
 
   useEffect(() => {
-    fetch(`https://dummyjson.com/users/?limit=20`)
+    fetch(`https://dummyjson.com/users/`)
       .then(result => result.json())
       .then(data => {
-        data = data.users.map(user => {
-          return {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            image: user.image
-          }
-        });
+        data = data.users.map(user => user.firstName);
         setUserList([...userList, ...data])
       })
   }, []);
   return (
     <div>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="Product" element={<ProductList />} />
+              <Route path="Product/:id" element={<ProductDetail />} />
+              <Route path="/Cart" element={<Cart />} />
+              <Route path="/Select" element={<Select />} />
+              <Route path="/Paint" element={<Paint />} />
+            </Route>
+            <Route element={<ProtectedRoute roles={['admin']} />} >
+              <Route path="/Admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="Product" element={<Product />} />
+                <Route path="Orders" element={<Order />} />
+              </Route>
+            </Route>
+            <Route element={<ProtectedRoute roles={['admin', 'member']} />} >
+              <Route path="/User/:id" element={<Home />} />
+              <Route path="/User/Edit/:id" element={<Home />} />
+              <Route path="*" element={<Page404 />} />
+            </Route>
+          </Routes>
 
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="Product" element={<ProductList />} />
-            <Route path="Product/:id" element={<ProductDetail />} />
-            <Route path="/Cart" element={<Cart />} />
-            <Route path="/Select" element={<Select />} />
-            <Route path="/Paint" element={<Paint />} />
-          </Route>
-          <Route path="/Admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="Product" element={<Product />} />
-            <Route path="Orders" element={<Order />} />
-          </Route>
-          <Route path="/User/:id" element={<Home />} />
-          <Route path="/User/Edit/:id" element={<Home />} />
-        </Routes>
-         <DynamicList dataList={ userList} template={() => import('./Component/Public/Card/User.jsx')} path="/User"></DynamicList>
-      </BrowserRouter>
-     
+          <AutoComplete data={userList} />
+        </BrowserRouter>
+
+      </AuthProvider>
     </div>
   )
 }
