@@ -1,7 +1,9 @@
-document.querySelector("#test").addEventListener("click",(e) => {
-    console.log(e);
-})
+let user = {
+    firstname: "Aurélien",
+    lastname: "Vaast",
+    email: "avaast@myges.fr"
+}
 
-document.querySelector("#test2").addEventListener("click",(e) => {
-    console.log(e);
-})
+for(let [key,value] of Object.entries(user)){
+    console.log(key + ":" + value);
+}

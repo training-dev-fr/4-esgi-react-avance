@@ -13,6 +13,7 @@ import Select from './Page/Public/Select';
 import Paint from './Page/Public/Paint/Paint';
 import Combobox from './Component/Public/Combobox/Combobox.jsx';
 import { useEffect, useState } from 'react';
+import DynamicList from './Component/Public/DynamicList/DynamicList.jsx';
 
 function App() {
   const [productList, setProductList] = useState([]);
@@ -31,7 +32,16 @@ function App() {
     fetch(`https://dummyjson.com/users/?limit=20`)
       .then(result => result.json())
       .then(data => {
-        setUserList([...userList, ...data.users])
+        data = data.users.map(user => {
+          return {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            image: user.image
+          }
+        });
+        setUserList([...userList, ...data])
       })
   }, []);
   return (
@@ -52,10 +62,12 @@ function App() {
             <Route path="Product" element={<Product />} />
             <Route path="Orders" element={<Order />} />
           </Route>
+          <Route path="/User/:id" element={<Home />} />
+          <Route path="/User/Edit/:id" element={<Home />} />
         </Routes>
+         <DynamicList dataList={ userList} template={() => import('./Component/Public/Card/User.jsx')} path="/User"></DynamicList>
       </BrowserRouter>
-      <Combobox list={productList} multiple={true} filter={true} onChange={() => true} template={() => import("./Component/Public/Combobox/Option/Product.jsx")} />
-      <Combobox list={userList} multiple={true} filter={true} onChange={() => true} template={() => import("./Component/Public/Combobox/Option/User.jsx")} />
+     
     </div>
   )
 }
